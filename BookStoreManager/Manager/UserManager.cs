@@ -36,5 +36,16 @@ namespace BookStoreManagers.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public string RestPassword(ResetPasswordModel userData)
+        {
+            try
+            {
+                return this.repository.RestPassword(userData);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

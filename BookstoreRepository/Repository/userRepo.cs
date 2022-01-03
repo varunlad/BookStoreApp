@@ -112,7 +112,30 @@ namespace UserRepository
             {
                 throw new ArgumentNullException(e.Message);
             }
+        }
+        public string RestPassword(ResetPasswordModel resetPassword)
+        {
+            try
+            {
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_UpdatePassword", con);
+                    string protectedPassword = EncryptPassword(resetPassword.NewPassword);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.AddWithValue("@femail", resetPassword.Email);
+                    cmd.Parameters.AddWithValue("@fnewPassword", protectedPassword);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    return "Password is Reset";
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
         }
     }
 }

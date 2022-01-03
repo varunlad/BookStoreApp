@@ -24,18 +24,15 @@ namespace BookStoreRepo.Controller
                 string result = this.manager.Register(userData);
                 if (result.Equals("Registration Successful"))
                 {
-                    //this.logger.Info(result + Environment.NewLine + DateTime.Now);
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
                 else
                 {
-                    //this.logger.Warn(result + Environment.NewLine + DateTime.Now);
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                //this.logger.Error(ex.Message + Environment.NewLine + DateTime.Now);
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -48,18 +45,37 @@ namespace BookStoreRepo.Controller
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Successful"))
                 {
-                    //this.logger.Info(result + Environment.NewLine + DateTime.Now);
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
                 else
                 {
-                    //this.logger.Warn(result + Environment.NewLine + DateTime.Now);
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                //this.logger.Error(ex.Message + Environment.NewLine + DateTime.Now);
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+        [HttpPut]
+        [Route("api/resetpassword")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordModel reset)
+        {
+            try
+            {
+                string result = this.manager.RestPassword(reset);
+
+                if (result.Equals("Password is Reset"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
