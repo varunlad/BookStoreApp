@@ -9,5 +9,6 @@ namespace UserRepository.Interface
         string Register(SignupModel user);
         string Login(LoginModel login);
         string RestPassword(ResetPasswordModel resetPassword);
+        string ForgotPassword(string email);
     }
 }

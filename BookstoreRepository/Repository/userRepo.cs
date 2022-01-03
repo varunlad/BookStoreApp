@@ -1,10 +1,12 @@
 ﻿
+using Experimental.System.Messaging;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using StackExchange.Redis;
 using System;
 
 using System.Data;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using UserModel;
@@ -136,6 +138,60 @@ namespace UserRepository
             {
                 throw new ArgumentNullException(e.Message);
             }
+        }
+        public string ForgotPassword(string email)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+                mail.From = new MailAddress(this.config["Credentials:Email"]);
+                mail.To.Add(email);
+                mail.Subject = "Test Mail";
+                this.SendMSMQ();
+                mail.Body = this.ReceiveMSMQ();
+                smtpServer.Port = 587;
+                smtpServer.Credentials = new System.Net.NetworkCredential(this.config["Credentials:Email"], this.config["Credentials:Password"]);
+                smtpServer.EnableSsl = true;
+                smtpServer.Send(mail);
+                return "Email send";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// With the Help of Message Queue the email is safely send and receive to the Destination.
+        /// </summary>
+        public void SendMSMQ()
+        {
+            MessageQueue messageQueue;
+            if (MessageQueue.Exists(@".\Private$\BookStore"))
+            {
+                messageQueue = new MessageQueue(@".\Private$\BookStore");
+            }
+            else
+            {
+                messageQueue = MessageQueue.Create(@".\Private$\BookStore");
+            }
+            messageQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
+            string body = "This is for Testing SMTP mail from GMAIL";
+            messageQueue.Label = "Mail Body";
+            messageQueue.Send(body);
+        }
+
+        /// <summary>
+        /// With the Help of Message Queue the email is safely send and receive to the Destination.
+        /// </summary>
+        /// <returns>Ensures the message is received to the receive.</returns>
+        public string ReceiveMSMQ()
+        {
+            MessageQueue messageQueue = new MessageQueue(@".\Private$\BookStore");
+            var receivemsg = messageQueue.Receive();
+            receivemsg.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
+            return receivemsg.Body.ToString();
         }
     }
 }

@@ -7,5 +7,6 @@ namespace BookStoreManagers.Interface
         string Register(SignupModel userData);
         string Login(LoginModel userData);
         string RestPassword(ResetPasswordModel userData);
+        string ForgotPassword(string email);
     }
 }

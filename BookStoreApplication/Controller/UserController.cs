@@ -79,5 +79,29 @@ namespace BookStoreRepo.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpPost]
+        [Route("api/forgotpassword")]
+        public IActionResult ForgotPassword(string email)
+        {
+            try
+            {
+                string result = this.manager.ForgotPassword(email);
+                //logger.LogInformation("A new User forgot password with email " + email);
+
+                if (result.Equals("Email send"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                //logger.LogWarning("Exception cought while Forgot password" + ex.Message);
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }
