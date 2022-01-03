@@ -5,6 +5,8 @@ using StackExchange.Redis;
 using System;
 
 using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 using UserModel;
 using UserRepository.Interface;
 
@@ -28,14 +30,14 @@ namespace UserRepository
                 if (user != null)
                 {
                     string ConnectionStrings = config.GetConnectionString(connectionString);
-                    // string protectedPassword = EncryptPassword(user.userPassword);
+                     string protectedPassword = EncryptPassword(user.Password);
                     using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
                     {
                         MySqlCommand cmd = new MySqlCommand("sp_Signup", con);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@sFullNmae", user.FullName);
                         cmd.Parameters.AddWithValue("@semail", user.Email);
-                        cmd.Parameters.AddWithValue("@suserPass", user.Password);
+                        cmd.Parameters.AddWithValue("@suserPass", protectedPassword);
                         cmd.Parameters.AddWithValue("@sPhoneNumber", user.PhoneNumber);
                         con.Open();
                         //cmd.ExecuteNonQuery();
@@ -59,6 +61,13 @@ namespace UserRepository
           {
                 throw new ArgumentNullException(e.Message);
           }
+        }
+        public string EncryptPassword(string password)
+        {
+            SHA384 sha384Hash = SHA384.Create(); ////creating object (it is a abstract class thats why we use create() method)
+            // ComputeHash - returns byte array  
+            byte[] bytesRepresentation = sha384Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return BitConverter.ToString(bytesRepresentation);
         }
         public string Login(LoginModel login)
         {
