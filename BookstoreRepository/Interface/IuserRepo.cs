@@ -7,5 +7,6 @@ namespace UserRepository.Interface
         string connectionString { get; set; }
 
         string Register(SignupModel user);
+        string Login(LoginModel login);
     }
 }
