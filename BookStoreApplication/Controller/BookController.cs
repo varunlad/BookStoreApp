@@ -59,5 +59,29 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpPut]
+        [Route("api/updatebook")]
+        public IActionResult ResetPassword([FromBody] BookModel bookModel)
+        {
+            try
+            {
+                string result = this.manager.UpdateBook(bookModel);
+                //logger.LogInformation("A new User reset password with email " + reset.Email);
+
+                if (result.Equals("Book is Updated"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                //logger.LogWarning("Exception cought while Reset password" + ex.Message);
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

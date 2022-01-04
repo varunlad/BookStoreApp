@@ -8,5 +8,6 @@ namespace BookstoreRepository.Interface
 
         string BookDetail(BookModel book);
         string DeleteBook(int id);
+        string UpdateBook(BookModel bookModel);
     }
 }

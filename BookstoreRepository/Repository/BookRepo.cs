@@ -81,5 +81,44 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public string UpdateBook(BookModel bookModel)
+        {
+            int result;
+            string msg;
+            try
+            {
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_UpdateBook", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@ubookName", bookModel.bookName);
+                    cmd.Parameters.AddWithValue("@ubookAuthor", bookModel.Author);
+                    cmd.Parameters.AddWithValue("@ubookPrice", bookModel.Price);
+                    cmd.Parameters.AddWithValue("@ubookDiscountprice", bookModel.discountPrice);
+                    cmd.Parameters.AddWithValue("@ubookDetail", bookModel.Detail);
+                    cmd.Parameters.AddWithValue("@ubookRating", bookModel.Rating);
+                    cmd.Parameters.AddWithValue("@ubookReview", bookModel.Review);
+                    cmd.Parameters.AddWithValue("@ubookImage", bookModel.Image);
+                    cmd.Parameters.AddWithValue("@ubookQuantity", bookModel.Quantity);
+                    con.Open();
+                    //ExecuteScalar: This method only returns a single value. This kind of query returns a count of rows or a calculated value.
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    con.Close();
+                    //Switch statement
+                    msg = result switch
+                    {
+                        -1 => "Book Does not Exits",
+                        _ => "Book is Updated",
+                    };
+                }
+                return msg;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+        }
     }
 }
