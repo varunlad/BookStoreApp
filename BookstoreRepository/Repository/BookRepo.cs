@@ -51,5 +51,35 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public string DeleteBook(int id)
+        {
+            int result;
+            string msg;
+            try
+            {
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_DeleteBook", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@dbookId", id);
+                    con.Open();
+                    //ExecuteScalar: This method only returns a single value. This kind of query returns a count of rows or a calculated value.
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    con.Close();
+                    //Switch statement
+                    msg = result switch
+                    {
+                        -1 => "Book Does not Exits",
+                        _ => "Book is Deleted",
+                    };
+                }
+                return msg;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+        }
     }
 }
