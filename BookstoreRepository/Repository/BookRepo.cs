@@ -120,5 +120,46 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public object GetBookId(int id)
+        {
+            try
+            {
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_GetBookById", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@gbookId", id);
+                    con.Open();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    BookModel bookDetail = new BookModel();
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            bookDetail.bookId = Convert.ToInt32(rdr["bookId"]);
+                            bookDetail.bookName = rdr["bookName"].ToString();
+                            bookDetail.Author = rdr["bookAuthor"].ToString();
+                            bookDetail.Price = Convert.ToInt32(rdr["bookPrice"]);
+                            bookDetail.discountPrice = Convert.ToInt32(rdr["bookDiscountprice"]);
+                            bookDetail.Detail = rdr["bookDetail"].ToString();
+                            bookDetail.Rating = Convert.ToInt32(rdr["bookRating"]);
+                            bookDetail.Review = rdr["bookReview"].ToString();
+                            bookDetail.Image = rdr["bookImage"].ToString();
+                            bookDetail.Quantity = Convert.ToInt32(rdr["bookQuantity"]);
+                            con.Close();
+                            return bookDetail;
+                        }
+                    }
+                    con.Close();
+                    return null;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+
+        }
     }
 }

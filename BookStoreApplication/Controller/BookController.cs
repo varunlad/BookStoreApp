@@ -83,5 +83,26 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpGet]
+        [Route("api/getbook")]
+        public IActionResult GetBookId(int id)
+        {
+            try
+            {
+                object result = this.manager.GetBookId(id);
+                if (result != null)
+                {
+                    return this.Ok(new ResponseModel<object>() { Status = true, Data = result, Message = "Book is Successfully Display" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<object>() { Status = false, Message = "Enter Correct Book Id" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<object>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }
