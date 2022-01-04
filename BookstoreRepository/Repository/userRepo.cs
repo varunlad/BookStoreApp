@@ -141,27 +141,46 @@ namespace UserRepository
         }
         public string ForgotPassword(string email)
         {
+            int result;
             try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress(this.config["Credentials:Email"]);
-                mail.To.Add(email);
-                mail.Subject = "Test Mail";
-                this.SendMSMQ();
-                mail.Body = this.ReceiveMSMQ();
-                smtpServer.Port = 587;
-                smtpServer.Credentials = new System.Net.NetworkCredential(this.config["Credentials:Email"], this.config["Credentials:Password"]);
-                smtpServer.EnableSsl = true;
-                smtpServer.Send(mail);
-                return "Email send";
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_forgotPassword", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@femailId", email);
+                    con.Open();
+                    //ExecuteScalar: This method only returns a single value. This kind of query returns a count of rows or a calculated value.
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    if (result == 0)
+                    {
+                        MailMessage mail = new MailMessage();
+                        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+                        mail.From = new MailAddress(this.config["Credentials:Email"]);
+                        mail.To.Add(email);
+                        mail.Subject = "Test Mail";
+                        this.SendMSMQ();
+                        mail.Body = this.ReceiveMSMQ();
+                        smtpServer.Port = 587;
+                        smtpServer.Credentials = new System.Net.NetworkCredential(this.config["Credentials:Email"], this.config["Credentials:Password"]);
+                        smtpServer.EnableSsl = true;
+                        smtpServer.Send(mail);
+                        con.Close();
+                        return "Email send";
+                    }
+                    else
+                    {
+                        return "Email Id doesnot Exits";
+                    }
+                }
+
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         /// <summary>
         /// With the Help of Message Queue the email is safely send and receive to the Destination.
         /// </summary>
