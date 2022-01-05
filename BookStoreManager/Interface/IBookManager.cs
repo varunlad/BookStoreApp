@@ -1,4 +1,5 @@
-﻿using UserModel;
+﻿using System.Collections.Generic;
+using UserModel;
 
 namespace BookStoreManager.Interface
 {
@@ -8,5 +9,6 @@ namespace BookStoreManager.Interface
         string DeleteBook(int id);
         string UpdateBook(BookModel bookModel);
         object GetBookId(int id);
+        IEnumerable<BookModel> DisplayAllBooks();
     }
 }
