@@ -1,4 +1,5 @@
-﻿using UserModel;
+﻿using System.Collections.Generic;
+using UserModel;
 
 namespace BookstoreRepository.Interface
 {
@@ -9,5 +10,6 @@ namespace BookstoreRepository.Interface
         string AddCart(CartModel cartModel);
         string DeleteCart(int id);
         string UpdateCart(int cartItemId, int QuantityUpdated);
+        IEnumerable<CartModel> GetCart(int id);
     }
 }

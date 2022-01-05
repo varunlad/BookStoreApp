@@ -48,5 +48,16 @@ namespace BookStoreManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<CartModel> GetCart(int id)
+        {
+            try
+            {
+                return this.repository.GetCart(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -119,5 +119,50 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public IEnumerable<CartModel> GetCart(int id)
+        {
+            try
+            {
+                List<CartModel> tempList = new List<CartModel>();
+                IEnumerable<CartModel> result;
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_DisplayCart", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@duserId", id);
+                    con.Open();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            CartModel cartModel = new CartModel();
+                            BookModel bookDetail = new BookModel();
+                            cartModel.userId = Convert.ToInt32(rdr["userId"]);
+                            cartModel.bookId = Convert.ToInt32(rdr["bookId"]);
+                            cartModel.bookQuantity = Convert.ToInt32(rdr["cartBookQuantity"]);
+                            bookDetail.bookName = rdr["bookName"].ToString();
+                            bookDetail.Author = rdr["bookAuthor"].ToString();
+                            bookDetail.Price = Convert.ToInt32(rdr["bookPrice"]);
+                            bookDetail.discountPrice = Convert.ToInt32(rdr["bookDiscountprice"]);
+                            cartModel.RefModel1 = bookDetail;
+                            tempList.Add(cartModel);
+
+                        }
+                        result = tempList;
+                        return result;
+                    }
+                    con.Close();
+                    return null;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+
+        }
     }
 }
