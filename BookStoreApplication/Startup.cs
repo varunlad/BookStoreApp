@@ -1,3 +1,9 @@
+using BookStoreManager.Interface;
+using BookStoreManager.Manager;
+using BookStoreManagers.Interface;
+using BookStoreManagers.Manager;
+using BookstoreRepository.Interface;
+using BookstoreRepository.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserRepository;
+using UserRepository.Interface;
 
 namespace BookStoreApplication
 {
@@ -23,7 +31,13 @@ namespace BookStoreApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddMvc();
+            services.AddTransient<IuserRepo, userRepo>();
+            services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IBookRepo, BookRepo>();
+            services.AddTransient<IBookManager, BookManager>();
+            services.AddTransient<ICartRepo, CartRepo>();
+            services.AddTransient<ICartManager, CartManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
