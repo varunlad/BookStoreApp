@@ -59,5 +59,26 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpPut]
+        [Route("api/updatecartitem")]
+        public IActionResult UpdateCart(int cartItemId, int QuantityUpdated)
+        {
+            try
+            {
+                string result = this.manager.UpdateCart(cartItemId, QuantityUpdated);
+                if (result.Equals("Cart is Updated"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

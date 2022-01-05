@@ -87,5 +87,37 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public string UpdateCart(int cartItemId, int QuantityUpdated)
+        {
+            int result;
+            string msg;
+            try
+            {
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_UpdateCart", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@uitemId", cartItemId);
+                    cmd.Parameters.AddWithValue("@ucartBookQuantity", QuantityUpdated);
+                    con.Open();
+                    //ExecuteScalar: This method only returns a single value. This kind of query returns a count of rows or a calculated value.
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    con.Close();
+                    //Switch statement
+                    msg = result switch
+                    {
+                        -1 => "Cart Does not Exits",
+                        _ => "Cart is Updated",
+                    };
+                }
+                return msg;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+        }
     }
 }

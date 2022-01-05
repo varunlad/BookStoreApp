@@ -37,5 +37,16 @@ namespace BookStoreManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public string UpdateCart(int cartItemId, int QuantityUpdated)
+        {
+            try
+            {
+                return this.repository.UpdateCart(cartItemId, QuantityUpdated);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

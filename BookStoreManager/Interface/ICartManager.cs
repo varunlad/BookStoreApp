@@ -6,5 +6,6 @@ namespace BookStoreManager.Interface
     {
         string AddCart(CartModel cartModel);
         string DeleteCart(int id);
+        string UpdateCart(int cartItemId, int QuantityUpdated);
     }
 }
