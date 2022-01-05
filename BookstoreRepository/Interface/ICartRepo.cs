@@ -7,5 +7,6 @@ namespace BookstoreRepository.Interface
         string connectionString { get; set; }
 
         string AddCart(CartModel cartModel);
+        string DeleteCart(int id);
     }
 }

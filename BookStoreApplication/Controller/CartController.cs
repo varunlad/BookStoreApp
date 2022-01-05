@@ -38,5 +38,26 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpDelete]
+        [Route("api/deletecartitem")]
+        public IActionResult DeleteCart(int id)
+        {
+            try
+            {
+                string result = this.manager.DeleteCart(id);
+                if (result.Equals("Item is Deleted"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }
