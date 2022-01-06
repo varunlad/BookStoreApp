@@ -1,4 +1,5 @@
-﻿using UserModel;
+﻿using System.Collections.Generic;
+using UserModel;
 
 namespace BookStoreManager.Interface
 {
@@ -6,5 +7,6 @@ namespace BookStoreManager.Interface
     {
         string AddressDetail(AddressModel addressModel);
         string UpdateAddress(AddressModel addressModel);
+        IEnumerable<AddressModel> DisplayAllAddress();
     }
 }

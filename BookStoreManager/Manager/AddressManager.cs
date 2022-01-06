@@ -36,5 +36,16 @@ namespace BookStoreManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<AddressModel> DisplayAllAddress()
+        {
+            try
+            {
+                return this.repository.DisplayAllAddress();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
