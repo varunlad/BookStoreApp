@@ -83,5 +83,26 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpGet]
+        [Route("api/getaddressbyId")]
+        public IActionResult GetAddressById(int UserId)
+        {
+            try
+            {
+                var result = this.manager.DisplayAddressById(UserId);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Data = result, Message = "Address is Retrived" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Address Not Retrived" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

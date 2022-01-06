@@ -47,5 +47,16 @@ namespace BookStoreManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<AddressModel> DisplayAddressById(int UserId)
+        {
+            try
+            {
+                return this.repository.DisplayAddressById(UserId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -118,5 +118,43 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public IEnumerable<AddressModel> DisplayAddressById(int UserId)
+        {
+            try
+            {
+                List<AddressModel> tempList = new List<AddressModel>();
+                IEnumerable<AddressModel> result;
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_GetAddressByUserId", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@guserId", UserId);
+                    con.Open();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            AddressModel addressModel = new AddressModel();
+                            addressModel.AddressId = Convert.ToInt32(rdr["addressId"]);
+                            addressModel.UserId = Convert.ToInt32(rdr["userId"]);
+                            addressModel.TypeId = Convert.ToInt32(rdr["typeId"]);
+                            addressModel.Address = rdr["typeId"].ToString();
+                            addressModel.City = rdr["city"].ToString();
+                            addressModel.State = rdr["state"].ToString();
+                            tempList.Add(addressModel);
+                        }
+                    }
+                    result = tempList;
+                    return result;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+        }
     }
 }

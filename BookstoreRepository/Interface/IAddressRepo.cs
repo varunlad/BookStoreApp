@@ -10,5 +10,6 @@ namespace BookstoreRepository.Interface
         string AddressDetail(AddressModel addressModel);
         string UpdateAddress(AddressModel addressModel);
         IEnumerable<AddressModel> DisplayAllAddress();
+        IEnumerable<AddressModel> DisplayAddressById(int UserId);
     }
 }
