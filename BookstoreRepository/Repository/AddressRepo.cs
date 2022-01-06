@@ -46,5 +46,40 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public string UpdateAddress(AddressModel addressModel)
+        {
+            int result;
+            string msg;
+            try
+            {
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_UpdateAddress", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@uaddressId", addressModel.AddressId);
+                    cmd.Parameters.AddWithValue("@uaddress", addressModel.Address);
+                    cmd.Parameters.AddWithValue("@ucity", addressModel.City);
+                    cmd.Parameters.AddWithValue("@ustate", addressModel.State);
+                    cmd.Parameters.AddWithValue("@utypeId", addressModel.TypeId);
+
+                    con.Open();
+                    //ExecuteScalar: This method only returns a single value. This kind of query returns a count of rows or a calculated value.
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    con.Close();
+                    //Switch statement
+                    msg = result switch
+                    {
+                        -1 => "AddressId Does not Exits",
+                        _ => "Address is Updated",
+                    };
+                }
+                return msg;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+        }
     }
 }

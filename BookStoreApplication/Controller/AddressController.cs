@@ -38,5 +38,29 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpPut]
+        [Route("api/updateaddress")]
+        public IActionResult UpdateAddress([FromBody] AddressModel address)
+        {
+            try
+            {
+                string result = this.manager.UpdateAddress(address);
+                //logger.LogInformation("A new User reset password with email " + reset.Email);
+
+                if (result.Equals("Address is Updated"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                //logger.LogWarning("Exception cought while Reset password" + ex.Message);
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }
