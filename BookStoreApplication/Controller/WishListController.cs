@@ -38,5 +38,26 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpDelete]
+        [Route("api/Deletewishlist")]
+        public IActionResult DeletWishListItem(int WishListId)
+        {
+            try
+            {
+                string result = this.manager.DeleteWishListItem(WishListId);
+                if (result.Equals("Book Removed From Wishlist"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }
