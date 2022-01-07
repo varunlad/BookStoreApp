@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using UserModel;
 
 namespace BookstoreRepository.Repository
 {
@@ -67,6 +68,50 @@ namespace BookstoreRepository.Repository
             {
                 throw new ArgumentNullException(e.Message);
             }
+        }
+        public IEnumerable<WishListModel> GetWishList(int UserId)
+        {
+            try
+            {
+                List<WishListModel> tempList = new List<WishListModel>();
+                IEnumerable<WishListModel> result;
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_GetWishListByUserId", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@guserId", UserId);
+                    con.Open();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            WishListModel wishList = new WishListModel();
+                            BookModel bookDetail = new BookModel();
+                            wishList.WishListId = Convert.ToInt32(rdr["wishlistId"]);
+                            bookDetail.bookName = rdr["bookName"].ToString();
+                            bookDetail.Author = rdr["bookAuthor"].ToString();
+                            bookDetail.Price = Convert.ToInt32(rdr["bookPrice"]);
+                            bookDetail.discountPrice = Convert.ToInt32(rdr["bookDiscountprice"]);
+                            bookDetail.Image = rdr["bookImage"].ToString();
+                            wishList.BookModelRef = bookDetail;
+                            tempList.Add(wishList);
+
+                        }
+                        result = tempList;
+                        return result;
+                    }
+                    con.Close();
+                    return null;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+
         }
     }
 }

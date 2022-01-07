@@ -3,6 +3,7 @@ using BookstoreRepository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UserModel;
 
 namespace BookStoreManager.Manager
 {
@@ -29,6 +30,17 @@ namespace BookStoreManager.Manager
             try
             {
                 return this.repository.DeleteWishListBook(WishListItem);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public IEnumerable<WishListModel> GetWishList(int UserId)
+        {
+            try
+            {
+                return this.repository.GetWishList(UserId);
             }
             catch (Exception ex)
             {
