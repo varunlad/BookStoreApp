@@ -38,6 +38,12 @@ namespace BookStoreApplication
             services.AddTransient<IBookManager, BookManager>();
             services.AddTransient<ICartRepo, CartRepo>();
             services.AddTransient<ICartManager, CartManager>();
+            services.AddTransient<IWishListRepo, WishListRepo>();
+            services.AddTransient<IWishListManager, WishListManager>();
+            services.AddTransient<IOrderRepo, OrderRepo>();
+            services.AddTransient<IOrderManager, OrderManager>();
+            services.AddTransient<IFeedBackRepo, FeedBackRepo>();
+            services.AddTransient<IFeedBackManager, FeedBackManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
