@@ -38,5 +38,26 @@ namespace BookStoreApplication.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        [HttpGet]
+        [Route("api/getorder")]
+        public IActionResult GetOrderList(int UserId)
+        {
+            try
+            {
+                var result = this.manager.GetOrderList(UserId);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Data = result, Message = " Retrived Order" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Not Retrived Cart" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

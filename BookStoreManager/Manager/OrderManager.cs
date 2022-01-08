@@ -25,5 +25,16 @@ namespace BookStoreManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<OrderModel> GetOrderList(int UserId)
+        {
+            try
+            {
+                return this.repository.GetOrderList(UserId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
