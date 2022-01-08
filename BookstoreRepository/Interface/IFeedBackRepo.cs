@@ -1,4 +1,5 @@
-﻿using UserModel;
+﻿using System.Collections.Generic;
+using UserModel;
 
 namespace BookstoreRepository.Interface
 {
@@ -7,5 +8,6 @@ namespace BookstoreRepository.Interface
         string connectionString { get; set; }
 
         string AddFeedback(FeedBackModel feedBackModel);
+        IEnumerable<FeedBackModel> GetFeedBackList(int BookId);
     }
 }

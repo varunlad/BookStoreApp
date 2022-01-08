@@ -25,5 +25,16 @@ namespace BookStoreManager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<FeedBackModel> GetFeedBackList(int BookId)
+        {
+            try
+            {
+                return this.repository.GetFeedBackList(BookId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

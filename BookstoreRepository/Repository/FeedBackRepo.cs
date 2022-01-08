@@ -41,5 +41,45 @@ namespace BookstoreRepository.Repository
                 throw new ArgumentNullException(e.Message);
             }
         }
+        public IEnumerable<FeedBackModel> GetFeedBackList(int BookId)
+        {
+            try
+            {
+                List<FeedBackModel> tempList = new List<FeedBackModel>();
+                IEnumerable<FeedBackModel> result;
+                string ConnectionStrings = config.GetConnectionString(connectionString);
+                using (MySqlConnection con = new MySqlConnection(ConnectionStrings))
+                {
+                    MySqlCommand cmd = new MySqlCommand("sp_GetFeedback", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@fbookId", BookId);
+                    con.Open();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            FeedBackModel feedBack = new FeedBackModel();
+                            SignupModel user = new SignupModel();
+                            feedBack.BookId = Convert.ToInt32(rdr["bookId"]);
+                            feedBack.UserId = Convert.ToInt32(rdr["userId"]);
+                            feedBack.Comments = rdr["comments"].ToString();
+                            feedBack.Ratings = Convert.ToInt32(rdr["Rating"]);
+                            user.FullName = rdr["userFullName"].ToString(); ;
+                            tempList.Add(feedBack);
+                        }
+                        result = tempList;
+                        return result;
+                    }
+                    con.Close();
+                    return null;
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new ArgumentNullException(e.Message);
+            }
+        }
     }
 }
